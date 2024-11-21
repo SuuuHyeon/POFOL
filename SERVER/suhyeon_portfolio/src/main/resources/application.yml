@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+
+  application:
+    name: SuhyeonShop
+  devtools:
+    livereload:
+      enabled: true # ?? ??
+    restart:
+      enabled: true # ???
+  thymeleaf:
+    cache: false # ?? ??
+
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/portfolio_server
+    username: root
+    password: 12341234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          description:
+            sql: trace
