@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:suhyeon_portfolio/pages/home/main_page.dart';
-import 'package:suhyeon_portfolio/pages/login_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/home/main_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/login_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/register_page.dart';
 
-class CustomRouter {
+class Routes {
   static GoRouter router = GoRouter(
+    initialLocation: '/login',
     routes: [
       /// 메인 페이지
       GoRoute(
         path: '/',
         pageBuilder: (context, state) => const MaterialPage(
-          child: MainPage(
-          ),
+          child: MainPage(),
         ),
       ),
+
       /// 로그인 페이지
       GoRoute(
         path: '/login',
         pageBuilder: (context, state) => MaterialPage(
           child: LoginPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/register',
+        pageBuilder: (context, state) => MaterialPage(
+          child: RegisterPage(),
         ),
       ),
     ],

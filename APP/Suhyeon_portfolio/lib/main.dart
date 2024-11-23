@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:suhyeon_portfolio/pages/login_page.dart';
-import 'package:suhyeon_portfolio/route/custom_router.dart';
+import 'package:suhyeon_portfolio/presentation/pages/login_page.dart';
+import 'package:suhyeon_portfolio/routes.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-void main() {
+void main() async {
+  // .env 파일 로드
+  await dotenv.load(fileName: "assets/config/.env");
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -15,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
         title: 'portfolio APP',
-        routerConfig: CustomRouter.router,
+        routerConfig: Routes.router,
 
         // theme: ThemeData(
         //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

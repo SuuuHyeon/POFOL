@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:suhyeon_portfolio/pages/home/tab/my_page.dart';
-import 'package:suhyeon_portfolio/pages/home/tab/portfolio_list_page.dart';
-import 'package:suhyeon_portfolio/pages/home/tab/portfolio_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/home/tab/my_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/home/tab/portfolio_list_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/home/tab/portfolio_page.dart';
 import 'package:suhyeon_portfolio/providers/bottom_state_provider.dart';
-import 'package:suhyeon_portfolio/route/custom_router.dart';
+import 'package:suhyeon_portfolio/routes.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class MainPage extends ConsumerWidget {

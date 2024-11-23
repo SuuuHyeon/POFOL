@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
@@ -66,8 +67,7 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // 로그인 로직 추가 예정
-                  print("Login button pressed");
-
+                  context.go('/');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary, // 버튼 색상
@@ -90,6 +90,7 @@ class LoginPage extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   // 회원가입 페이지로 이동하는 로직 추가 예정
+                  context.push('/register');
                   
                 },
                 child: const Text(
