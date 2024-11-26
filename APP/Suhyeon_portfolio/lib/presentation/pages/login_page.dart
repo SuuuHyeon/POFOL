@@ -3,13 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -91,7 +91,6 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   // 회원가입 페이지로 이동하는 로직 추가 예정
                   context.push('/register');
-                  
                 },
                 child: const Text(
                   "아이디가 없으신가요?",

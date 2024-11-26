@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suhyeon_portfolio/presentation/pages/add_portfolio_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/home/main_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/login_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/register_page.dart';
@@ -19,14 +20,20 @@ class Routes {
       /// 로그인 페이지
       GoRoute(
         path: '/login',
-        pageBuilder: (context, state) => MaterialPage(
+        pageBuilder: (context, state) => const MaterialPage(
           child: LoginPage(),
         ),
       ),
       GoRoute(
         path: '/register',
-        pageBuilder: (context, state) => MaterialPage(
+        pageBuilder: (context, state) => const MaterialPage(
           child: RegisterPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/add_portfolio',
+        pageBuilder: (context, state) => const MaterialPage(
+          child: AddPortfolioPage(),
         ),
       ),
     ],

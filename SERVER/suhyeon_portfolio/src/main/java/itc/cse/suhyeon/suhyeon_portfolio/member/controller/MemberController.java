@@ -6,10 +6,7 @@ import itc.cse.suhyeon.suhyeon_portfolio.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/member")
@@ -31,8 +28,8 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login() {
-
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login() {
+//
+//    }
 }
