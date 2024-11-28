@@ -9,7 +9,7 @@ class MemberNotifier extends StateNotifier<Member?> {
 
   MemberNotifier(this.repository) : super(null);
 
-  // 회원가입 로직
+  /// 회원가입
   Future<bool> registerMember({
     required String email,
     required String password,
@@ -25,6 +25,22 @@ class MemberNotifier extends StateNotifier<Member?> {
       );
     } catch (e) {
       print('가입실패(viewModel) $e');
+      rethrow;
+    }
+  }
+
+  /// 로그인
+  Future<bool> loginMember({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      return await repository.login(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print('로그인실패(viewModel) $e');
       rethrow;
     }
   }

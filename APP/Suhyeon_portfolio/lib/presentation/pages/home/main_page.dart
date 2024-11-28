@@ -3,16 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/presentation/pages/home/tab/my_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/home/tab/portfolio_list_page.dart';
-import 'package:suhyeon_portfolio/presentation/pages/home/tab/portfolio_page.dart';
+import 'package:suhyeon_portfolio/presentation/pages/github_web_view_page.dart';
 import 'package:suhyeon_portfolio/providers/bottom_state_provider.dart';
+import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
 import 'package:suhyeon_portfolio/routes.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
-class MainPage extends ConsumerWidget {
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MainPage> createState() => _MainPageState();
+
+}
+
+class _MainPageState extends ConsumerState<MainPage> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(portfolioViewmodelProvider).getPortfolioList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // 바텀네비게이션 인덱스 상태를 적용시키기 위해 ref.watch로 인덱스를 가져옴 (read가 아닌 watch로 가져옴 read는 상태변경 불가능)
     final tabIndex = ref.watch(bottomStateProvider);
     // 바텀네비게이션 인덱스 변경을 위해 ref.read로 상태를 가져옴(상태 감지가 아닌 인덱스 변경을 위해 사용하기 때문에 read로 가져와도 됨)
@@ -20,10 +37,12 @@ class MainPage extends ConsumerWidget {
 
     // 페이지 리스트
     final List<Widget> pages = [
-      const PortfolioPage(),
+      // const GithubWebViewPage(),
       const PortfolioListPage(),
       const MyPage(),
     ];
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -70,10 +89,10 @@ class MainPage extends ConsumerWidget {
           bottomState.changeState(index);
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '이력서',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.home),
+          //   label: '이력서',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: '포트폴리오',

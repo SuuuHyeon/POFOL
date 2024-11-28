@@ -2,17 +2,17 @@
 enum Tier { silver, gold, platinum, }
 
 class Member {
-  final String name;
+  final String? name;
   final String email;
   final String password;
-  final String position;
+  final String? position;
   final Tier? tier;
 
   Member({
-    required this.name,
+    this.name,
     required this.email,
     required this.password,
-    required this.position,
+    this.position,
     this.tier,
   });
 

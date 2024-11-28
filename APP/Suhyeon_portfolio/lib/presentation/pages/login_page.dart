@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suhyeon_portfolio/providers/member_provider.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
@@ -64,26 +66,41 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 30),
 
               // 로그인 버튼
-              ElevatedButton(
-                onPressed: () {
-                  // 로그인 로직 추가 예정
-                  context.go('/');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary, // 버튼 색상
-                  minimumSize: const Size(double.infinity, 60), // 버튼 크기
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Consumer(builder: (context, ref, child) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    // 로그인 로직 추가 예정
+                    try {
+                      await ref.read(memberProvider.notifier).loginMember(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                      context.go('/');
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary, // 버튼 색상
+                    minimumSize: const Size(double.infinity, 60), // 버튼 크기
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  "로그인",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
+                  child: const Text(
+                    "로그인",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                );
+              }),
               const SizedBox(height: 10),
 
               // 회원가입 텍스트 버튼

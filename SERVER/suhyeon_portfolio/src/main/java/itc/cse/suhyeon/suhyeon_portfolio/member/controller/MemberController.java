@@ -2,6 +2,7 @@ package itc.cse.suhyeon.suhyeon_portfolio.member.controller;
 
 
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberDto;
+import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberLoginDto;
 import itc.cse.suhyeon.suhyeon_portfolio.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,17 @@ public class MemberController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody MemberLoginDto member) {
+        try {
+            memberService.login(member.getEmail(), member.getPassword());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 중 오류가 발생했습니다.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
+    }
 //    @PostMapping("/login")
 //    public ResponseEntity<?> login() {
 //

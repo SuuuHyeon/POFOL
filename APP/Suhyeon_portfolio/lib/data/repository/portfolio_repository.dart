@@ -9,6 +9,7 @@ class PortfolioRepository {
 
   static PortfolioRepository get instance => PortfolioRepository();
 
+  /// 포트폴리오 업로드
   Future<bool> uploadPortfolio(
       String title, String description, PlatformFile file) async {
     var dio = Dio();
@@ -29,6 +30,7 @@ class PortfolioRepository {
     }
   }
 
+  /// 포트폴리오 전체 리스트 조회
   Future<List<Portfolio>> getPortfolioList() async {
     var dio = Dio();
     final response = await dio.get('http://localhost:8080/api/portfolio/list');

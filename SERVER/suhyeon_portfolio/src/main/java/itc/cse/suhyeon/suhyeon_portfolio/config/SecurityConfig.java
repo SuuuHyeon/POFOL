@@ -17,7 +17,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+//        http.formLogin(form -> form
+//                .loginPage("/api/member/login")
+//                .defaultSuccessUrl("/") // ???
+//                .usernameParameter("email")
+//                .passwordParameter("password")
+////                .failureUrl("/api/member/login")
+//                .permitAll()
+//        );
+
+        http.authorizeHttpRequests(request -> request
+                .requestMatchers("/css/**", "/images/**").permitAll()
+                .requestMatchers("/", "/api/member/**").permitAll()
+                .requestMatchers("/api/portfolio/**").permitAll()
+                .anyRequest().authenticated()
+        );
+
+
         http.csrf(AbstractHttpConfigurer::disable);
+
+
 
         return http.build();
     }

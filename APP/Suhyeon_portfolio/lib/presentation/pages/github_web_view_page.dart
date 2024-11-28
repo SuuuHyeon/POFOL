@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:suhyeon_portfolio/providers/web_view_controller_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class PortfolioPage extends ConsumerWidget {
-  const PortfolioPage({super.key});
+class GithubWebViewPage extends ConsumerWidget {
+  const GithubWebViewPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
