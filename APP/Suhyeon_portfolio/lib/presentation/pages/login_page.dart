@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:suhyeon_portfolio/providers/member_provider.dart';
+import 'package:suhyeon_portfolio/providers/auth_provider.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
@@ -71,7 +71,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () async {
                     // 로그인 로직 추가 예정
                     try {
-                      await ref.read(memberProvider.notifier).loginMember(
+                      await ref.read(authProvider.notifier).loginMember(
                             email: emailController.text,
                             password: passwordController.text,
                           );

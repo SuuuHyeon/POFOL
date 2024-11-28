@@ -1,5 +1,6 @@
 package itc.cse.suhyeon.suhyeon_portfolio.portfolio.entity;
 
+import itc.cse.suhyeon.suhyeon_portfolio.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Entity
 
-public class Portfolio {
+public class Portfolio extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

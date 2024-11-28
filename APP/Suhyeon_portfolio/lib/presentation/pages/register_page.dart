@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:suhyeon_portfolio/providers/member_provider.dart';
+import 'package:suhyeon_portfolio/providers/auth_provider.dart';
 import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -112,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // 회원가입 로직 실행
                 try {
                   final result =
-                      await ref.read(memberProvider.notifier).registerMember(
+                      await ref.read(authProvider.notifier).registerMember(
                             email: emailController.text,
                             password: passwordController.text,
                             name: nameController.text,

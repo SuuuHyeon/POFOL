@@ -1,5 +1,6 @@
 package itc.cse.suhyeon.suhyeon_portfolio.member.entity;
 
+import itc.cse.suhyeon.suhyeon_portfolio.common.entity.BaseEntity;
 import itc.cse.suhyeon.suhyeon_portfolio.member.constant.Tier;
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberDto;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

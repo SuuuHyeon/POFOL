@@ -1,6 +1,7 @@
 package itc.cse.suhyeon.suhyeon_portfolio.member.service;
 
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberDto;
+import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberResponseDto;
 import itc.cse.suhyeon.suhyeon_portfolio.member.entity.Member;
 import itc.cse.suhyeon.suhyeon_portfolio.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,11 @@ public class MemberService {
     }
 
     // 로그인
-    public void login(String email, String password) {
+    public MemberResponseDto login(String email, String password) {
         Optional<Member> member = memberRepository.findByEmail(email);
         if(member.isPresent()) {
             if (passwordEncoder.matches(password, member.get().getPassword())) {
-                log.info("로그인 성공");
+                return MemberResponseDto.toDto(member.get());
             } else {
                 throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
             }

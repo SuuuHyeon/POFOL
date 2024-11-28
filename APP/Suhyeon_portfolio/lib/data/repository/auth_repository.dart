@@ -48,7 +48,7 @@ class AuthRepository {
   }
 
   /// 로그인
-  Future<bool> login({
+  Future<Member> login({
     required String email,
     required String password,
   }) async {
@@ -60,8 +60,10 @@ class AuthRepository {
       );
 
       if (response.statusCode == 200) {
-        return true; // 성공
+        print(response.data);
+        return Member.fromJson(response.data);
       } else {
+        print('1');
         throw('로그인 실패: ${response.statusCode}');
       }
     } on DioException catch (e) {
@@ -76,6 +78,7 @@ class AuthRepository {
         throw '로그인 중 알 수 없는 오류 발생: $e';
       }
     } catch (e) {
+      print('2');
       throw '로그인 중 알 수 없는 오류 발생: $e';
     }
   }

@@ -4,26 +4,38 @@ enum Tier { silver, gold, platinum, }
 class Member {
   final String? name;
   final String email;
-  final String password;
+  final String? password;
   final String? position;
   final Tier? tier;
 
   Member({
     this.name,
     required this.email,
-    required this.password,
+    this.password,
     this.position,
     this.tier,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
     return Member(
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-      position: json['position'],
-      tier: json['tier'] != null ? Tier.values[json['tier']] : null,
+    name: json['name'],
+    email: json['email'],
+    position: json['position'],
+    tier: _tierFromString(json['tier']),
     );
+  }
+
+  static Tier? _tierFromString(String tierString) {
+    switch (tierString) {
+      case 'SILVER':
+        return Tier.silver;
+      case 'GOLD':
+        return Tier.gold;
+      case 'PLATINUM':
+        return Tier.platinum;
+      default:
+        return null;
+    }
   }
 
   Map<String, dynamic> toJson() {

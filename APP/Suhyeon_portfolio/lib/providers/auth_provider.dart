@@ -4,10 +4,10 @@ import 'package:suhyeon_portfolio/data/DioClient.dart';
 import 'package:suhyeon_portfolio/data/model/member.dart';
 import 'package:suhyeon_portfolio/data/repository/auth_repository.dart';
 
-class MemberNotifier extends StateNotifier<Member?> {
+class AuthViewmodel extends StateNotifier<Member?> {
   final AuthRepository repository;
 
-  MemberNotifier(this.repository) : super(null);
+  AuthViewmodel(this.repository) : super(null);
 
   /// 회원가입
   Future<bool> registerMember({
@@ -35,10 +35,12 @@ class MemberNotifier extends StateNotifier<Member?> {
     required String password,
   }) async {
     try {
-      return await repository.login(
+      final response = await repository.login(
         email: email,
         password: password,
       );
+      state = response;
+      return true;
     } catch (e) {
       print('로그인실패(viewModel) $e');
       rethrow;
@@ -46,9 +48,9 @@ class MemberNotifier extends StateNotifier<Member?> {
   }
 }
 
+final authRepositoryProvider =
+    Provider((ref) => AuthRepository(ref.watch(dioProvider)));
 
-final authRepositoryProvider = Provider((ref) => AuthRepository(ref.watch(dioProvider)));
-
-final memberProvider = StateNotifierProvider<MemberNotifier, Member?>(
-  (ref) => MemberNotifier(ref.watch(authRepositoryProvider)),
+final authProvider = StateNotifierProvider<AuthViewmodel, Member?>(
+  (ref) => AuthViewmodel(ref.watch(authRepositoryProvider)),
 );

@@ -14,11 +14,9 @@ class MainPage extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<MainPage> createState() => _MainPageState();
-
 }
 
 class _MainPageState extends ConsumerState<MainPage> {
-
   @override
   void initState() {
     super.initState();
@@ -37,23 +35,24 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     // 페이지 리스트
     final List<Widget> pages = [
-      // const GithubWebViewPage(),
       const PortfolioListPage(),
       const MyPage(),
     ];
-
-
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
-        leading: tabIndex == 2
+        leading: tabIndex == 1
             ? Row(
                 children: [
                   const SizedBox(width: 20),
                   Expanded(
-                    child: Text('프로필', style: TextStyle(fontSize: 28, letterSpacing: 1, fontWeight: FontWeight.bold)),
+                    child: Text('프로필',
+                        style: TextStyle(
+                            fontSize: 28,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.bold)),
                   ),
                 ],
               )
@@ -83,23 +82,19 @@ class _MainPageState extends ConsumerState<MainPage> {
         backgroundColor: Colors.white,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
-        iconSize: 22,
+        iconSize: 27,
         currentIndex: tabIndex,
         onTap: (index) {
           bottomState.changeState(index);
         },
         items: const [
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.home),
-          //   label: '이력서',
-          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: '포트폴리오',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: '마이페이지',
+            label: '내정보',
           ),
         ],
       ),

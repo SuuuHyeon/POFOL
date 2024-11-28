@@ -1,6 +1,7 @@
 package itc.cse.suhyeon.suhyeon_portfolio.portfolio.entity;
 
 
+import itc.cse.suhyeon.suhyeon_portfolio.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PortfolioFile {
+public class PortfolioFile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

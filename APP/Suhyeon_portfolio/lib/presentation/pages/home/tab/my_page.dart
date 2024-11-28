@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suhyeon_portfolio/providers/auth_provider.dart';
 import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
 
 class MyPage extends ConsumerWidget {
   const MyPage({super.key});
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final portfolioViewModel = ref.watch(portfolioViewmodelProvider);
+    final memberInfo = ref.watch(authProvider);
 
     return Scaffold(
       body: Container(
@@ -27,18 +28,18 @@ class MyPage extends ConsumerWidget {
                       "https://cdn.pixabay.com/photo/2017/12/10/13/37/christmas-3009949_1280.jpg"),
                 ),
                 const SizedBox(width: 16),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "김수현",
+                      '${memberInfo?.name}',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "Flutter 개발자 | 신입",
+                      '${memberInfo?.position} / ${memberInfo?.tier?.name}',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
