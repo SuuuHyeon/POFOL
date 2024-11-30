@@ -1,6 +1,7 @@
 package itc.cse.suhyeon.suhyeon_portfolio.member.dto;
 
 import itc.cse.suhyeon.suhyeon_portfolio.member.constant.Tier;
+import itc.cse.suhyeon.suhyeon_portfolio.member.entity.Member;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;

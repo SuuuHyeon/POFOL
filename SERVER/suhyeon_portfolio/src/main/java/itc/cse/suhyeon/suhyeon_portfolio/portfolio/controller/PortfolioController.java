@@ -34,7 +34,7 @@ public class PortfolioController {
         }
     }
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     public ResponseEntity<List<PortfolioResponseDto>> getPortfolioList() {
         try {
             List<PortfolioResponseDto> allPortfolioList = portfolioService.findAllPortfolioList();

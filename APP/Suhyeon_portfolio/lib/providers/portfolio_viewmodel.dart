@@ -7,18 +7,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:suhyeon_portfolio/data/model/portfolio.dart';
 import 'package:suhyeon_portfolio/data/repository/portfolio_repository.dart';
 
+import '../data/DioClient.dart';
+
 final baseUrl = dotenv.env['BASE_URL'];
 
 class PortFolioViewmodel extends ChangeNotifier {
+  final PortfolioRepository portfolioRepository;
   final List<Portfolio> portfolioList = [];
   bool isLoading = false;
 
+  PortFolioViewmodel(this.portfolioRepository) : super();
+
   // 포트폴리오 업로드
-  Future<void> uploadPortfolio(String title, String description,
-      PlatformFile file) async {
+  Future<void> uploadPortfolio(
+      String title, String description, PlatformFile file) async {
     try {
-      final response = await PortfolioRepository.instance
-          .uploadPortfolio(title, description, file);
+      final response =
+          await portfolioRepository.uploadPortfolio(title, description, file);
       if (response) {
         print('파일 업로드 성공');
       } else {
@@ -34,12 +39,11 @@ class PortFolioViewmodel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await PortfolioRepository.instance.getPortfolioList();
+      final response = await portfolioRepository.getPortfolioList();
       print('포트폴리오 리스트 : $response');
       if (response.isNotEmpty) {
         final updatedList = response
-            .map((item) =>
-            item.copyWith(
+            .map((item) => item.copyWith(
                 fileUrl: '$baseUrl${item.fileUrl}')) // fileUrl 앞에 baseUrl 붙임
             .toList();
         portfolioList.clear();
@@ -59,5 +63,5 @@ class PortFolioViewmodel extends ChangeNotifier {
 }
 
 // 포트폴리오뷰모델 프로바이더
-  final portfolioViewmodelProvider =
-  ChangeNotifierProvider((ref) => PortFolioViewmodel());
+final portfolioViewmodelProvider = ChangeNotifierProvider<PortFolioViewmodel>(
+    (ref) => PortFolioViewmodel(ref.read(portfolioRepositoryProvider)));

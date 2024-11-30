@@ -113,10 +113,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 try {
                   final result =
                       await ref.read(authProvider.notifier).registerMember(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            name: nameController.text,
-                            position: selectedPosition ?? '',
+                            emailController.text,
+                            passwordController.text,
+                            nameController.text,
+                            selectedPosition ?? '',
                           );
                   if (result) {
                     ScaffoldMessenger.of(context).showSnackBar(

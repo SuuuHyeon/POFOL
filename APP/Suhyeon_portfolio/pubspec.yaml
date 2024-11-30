@@ -31,6 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # 시큐리티 스토리지
+  flutter_secure_storage: ^9.2.2
+
   # riverpod(상태관리)
   flutter_riverpod: ^2.6.1
 
@@ -48,6 +51,8 @@ dependencies:
 
   # file picker
   file_picker: ^8.1.4
+
+
 
 
   # The following adds the Cupertino Icons font to your application.

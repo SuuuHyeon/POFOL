@@ -23,6 +23,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
@@ -43,6 +44,8 @@ spring:
     resources:
       static-locations: file:/Users/suhyeon/Documents/pofol/portfolio/
 
+jwt:
+  secret: 037c774c547189f75fb74ddcf37545f35b8f5f58000bebf99fd7320d7b2a6c93
 
 
 fileLocation: /Users/suhyeon/Documents/pofol/portfolio     # 서버 내부에서 사용(파일 저장 경로)

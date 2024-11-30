@@ -72,8 +72,8 @@ class LoginPage extends StatelessWidget {
                     // 로그인 로직 추가 예정
                     try {
                       await ref.read(authProvider.notifier).loginMember(
-                            email: emailController.text,
-                            password: passwordController.text,
+                            emailController.text,
+                            passwordController.text,
                           );
                       context.go('/');
                     } catch (e) {
