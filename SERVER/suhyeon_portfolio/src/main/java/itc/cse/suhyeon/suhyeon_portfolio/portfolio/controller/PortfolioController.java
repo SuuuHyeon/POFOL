@@ -22,7 +22,7 @@ public class PortfolioController {
     final PortfolioService portfolioService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadPortfolio(@ModelAttribute PortfolioDto dto) throws IOException {
+    public ResponseEntity<?> uploadPortfolio(@ModelAttribute PortfolioDto dto) {
         log.info("포트폴리오 컨트롤러 진입");
         log.info(dto.toString());
         try {
@@ -34,15 +34,31 @@ public class PortfolioController {
         }
     }
 
-    @PostMapping("/list")
-    public ResponseEntity<List<PortfolioResponseDto>> getPortfolioList() {
+    // 내가 작성한 포트폴리오 리스트 조회(토큰으로 조회)
+    @GetMapping("/list")
+    public ResponseEntity<List<PortfolioResponseDto>> getPortfolioList(@RequestHeader("Authorization") String token) {
         try {
-            List<PortfolioResponseDto> allPortfolioList = portfolioService.findAllPortfolioList();
+            String accessToken = token.substring(7);
+            List<PortfolioResponseDto> allPortfolioList = portfolioService.findAllPortfolioList(accessToken);
             log.info("포트폴리오 리스트: " + allPortfolioList.toString());
             return ResponseEntity.status(200).body(allPortfolioList);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
 
+    }
+
+    @PutMapping
+
+
+    // 포트폴리오 삭제
+    @DeleteMapping("/delete/{portfolioId}")
+    public ResponseEntity<?> deletePortfolio(@PathVariable Long portfolioId) {
+        try {
+            portfolioService.deletePortfolio(portfolioId);
+            return ResponseEntity.status(200).body("포트폴리오 삭제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("포트폴리오 삭제 실패");
+        }
     }
 }

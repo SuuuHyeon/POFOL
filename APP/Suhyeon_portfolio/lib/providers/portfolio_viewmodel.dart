@@ -18,7 +18,7 @@ class PortFolioViewmodel extends ChangeNotifier {
 
   PortFolioViewmodel(this.portfolioRepository) : super();
 
-  // 포트폴리오 업로드
+  /// 포트폴리오 업로드
   Future<void> uploadPortfolio(
       String title, String description, PlatformFile file) async {
     try {
@@ -34,25 +34,26 @@ class PortFolioViewmodel extends ChangeNotifier {
     }
   }
 
-  // 포트폴리오 리스트 불러오기
+  /// 포트폴리오 리스트 불러오기
   Future<void> getPortfolioList() async {
     isLoading = true;
     notifyListeners();
     try {
       final response = await portfolioRepository.getPortfolioList();
       print('포트폴리오 리스트 : $response');
-      if (response.isNotEmpty) {
+      if(response.isEmpty) {
+          portfolioList.clear();
+          notifyListeners();
+          return;
+      }
         final updatedList = response
             .map((item) => item.copyWith(
                 fileUrl: '$baseUrl${item.fileUrl}')) // fileUrl 앞에 baseUrl 붙임
             .toList();
         portfolioList.clear();
         portfolioList.addAll(updatedList);
-
         notifyListeners();
-      } else {
-        print('포트폴리오 리스트가 비어있습니다.');
-      }
+
     } catch (e) {
       print(e);
     } finally {
@@ -60,6 +61,28 @@ class PortFolioViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// 포트폴리오 삭제
+  Future<void> deletePortfolio(int portfolioId) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+      await portfolioRepository.deletePortfolio(portfolioId);
+      // portfolioList.removeWhere((element) => element.id == portfolioId);
+      await getPortfolioList();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// 포트폴리오 수정
+  // Future<void> updatePortfolio(int portfolioId, String title, String description, PlatformFile file) {
+  //
+  // }
 }
 
 // 포트폴리오뷰모델 프로바이더

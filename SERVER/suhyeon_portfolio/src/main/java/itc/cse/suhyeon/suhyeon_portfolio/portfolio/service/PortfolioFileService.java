@@ -3,6 +3,8 @@ package itc.cse.suhyeon.suhyeon_portfolio.portfolio.service;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.entity.Portfolio;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.entity.PortfolioFile;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.repository.PortfolioFileRepository;
+import itc.cse.suhyeon.suhyeon_portfolio.portfolio.repository.PortfolioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PortfolioFileService {
 
+    private final PortfolioRepository portfolioRepository;
     @Value(value = "${fileLocation}")
     private String fileLocation;
 
@@ -34,22 +37,33 @@ public class PortfolioFileService {
 
         String fileUrl = "/images/portfolio/" + savedFileName; // portfolioFile의 fileUrl값
 
-//        log.info("========= 파일 정보 =========");
-//        log.info(originalFileName);
-//        log.info(ext);
-//        log.info(savedFileName);
-//        log.info(fileUploadFullPath);
-
         PortfolioFile portfolioFile = PortfolioFile.builder()
                 .orgNm(originalFileName)
                 .savedNm(savedFileName)
                 .savedPath(fileUrl)
                 .build();
 
-        // 파일 저장
+        // 경로에 파일 저장
         file.transferTo(new File(fileUploadFullPath));
 
+        // db에 파일 저장
         portfolioFileRepository.save(portfolioFile);
         return portfolioFile;
+    }
+
+    // 파일 삭제
+    public void deleteFile(String filePath) {
+        // 실제 경로로 변환
+        String fileUploadFullPath = fileLocation + filePath.replace("/images/portfolio/", "/");
+        File deleteFile = new File(fileUploadFullPath);
+        if (deleteFile.exists()) {
+            if (deleteFile.delete()) {
+                log.info("========== 파일 삭제 성공 ==========");
+            } else {
+                log.info("========== 파일 삭제 실패 ==========");
+            }
+        } else {
+            log.info(filePath + "파일이 존재하지 않습니다.");
+        }
     }
 }

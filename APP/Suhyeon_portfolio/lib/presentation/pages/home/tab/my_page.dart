@@ -165,6 +165,9 @@ class MyPage extends ConsumerWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          Text('ID: ${portfolio.id}',
+                                              style: const TextStyle(
+                                                  color: Colors.grey)),
                                           Text(
                                             portfolio.title,
                                             style: const TextStyle(
@@ -180,6 +183,9 @@ class MyPage extends ConsumerWidget {
                                               color: Colors.grey,
                                             ),
                                           ),
+                                          ElevatedButton(onPressed: () {
+                                            portfolioViewModel.deletePortfolio(portfolio.id);
+                                          }, child: const Text('삭제'))
                                         ],
                                       ),
                                     ),

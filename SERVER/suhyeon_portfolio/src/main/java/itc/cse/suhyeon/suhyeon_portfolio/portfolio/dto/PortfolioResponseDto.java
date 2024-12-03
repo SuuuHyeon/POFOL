@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class PortfolioResponseDto {
 
+    private Long id;
     private String title;
     private String description;
     private String fileUrl;

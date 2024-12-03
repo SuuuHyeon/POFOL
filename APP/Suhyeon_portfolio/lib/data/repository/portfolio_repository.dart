@@ -43,7 +43,7 @@ class PortfolioRepository {
   /// 포트폴리오 전체 리스트 조회
   Future<List<Portfolio>> getPortfolioList() async {
     final accessToken = await _secureStorage.read('accessToken');
-    final response = await _dio.post(
+    final response = await _dio.get(
       '/api/portfolio/list',
       options: Options(
         // 헤더에 토큰 넣어줘야 함
@@ -59,6 +59,30 @@ class PortfolioRepository {
       return data;
     } else {
       throw Exception('포트폴리오 리스트를 불러오는데 실패했습니다.');
+    }
+  }
+
+  /// 포트폴리오 삭제
+  Future<void> deletePortfolio(int portfolioId) async {
+    print('포트폴리오 삭제 요청 ID: $portfolioId');
+    final accessToken = await _secureStorage.read('accessToken');
+    print('포트폴리오 삭제 요청 accessToken: $accessToken');
+    try {
+      final response = await _dio.delete(
+        '/api/portfolio/delete/$portfolioId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('포트폴리오 삭제에 실패했습니다.');
+      }
+    } catch (e) {
+      throw Exception('포트폴리오 삭제 중 에러발생.');
     }
   }
 }
