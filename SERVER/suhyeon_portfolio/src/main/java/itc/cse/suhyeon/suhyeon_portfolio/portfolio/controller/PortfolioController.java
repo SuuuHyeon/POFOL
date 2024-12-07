@@ -4,6 +4,7 @@ package itc.cse.suhyeon.suhyeon_portfolio.portfolio.controller;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.dto.PortfolioDto;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.dto.PortfolioResponseDto;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.entity.Portfolio;
+import itc.cse.suhyeon.suhyeon_portfolio.portfolio.repository.PortfolioRepository;
 import itc.cse.suhyeon.suhyeon_portfolio.portfolio.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +21,18 @@ import java.util.List;
 public class PortfolioController {
 
     final PortfolioService portfolioService;
+    private final PortfolioRepository portfolioRepository;
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPortfolio(@ModelAttribute PortfolioDto dto) {
         log.info("포트폴리오 컨트롤러 진입");
         log.info(dto.toString());
         try {
-            Portfolio portfolio = portfolioService.savePortfolio(dto);
-            return ResponseEntity.ok("파일 업로드 완료: " + portfolio.toString());
+            portfolioService.savePortfolio(dto);
+            return ResponseEntity.ok("파일 업로드 완료: ");
         } catch (Exception e) {
             log.info("업로드 실패");
-            return ResponseEntity.status(500).body("파일 업로드 실패: " + e.getMessage());
+            return ResponseEntity.status(500).body("파일 업로드 실패");
         }
     }
 
@@ -48,7 +50,16 @@ public class PortfolioController {
 
     }
 
-    @PutMapping
+    @PutMapping("/update/{portfolioId}")
+    public ResponseEntity<?> updatePortfolio(@PathVariable Long portfolioId, @ModelAttribute PortfolioDto portfolioDto) {
+        try {
+            portfolioService.updatePortfolio(portfolioId, portfolioDto);
+            return ResponseEntity.status(200).body("포트폴리오 수정 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("포트폴리오 수정 실패");
+        }
+
+    }
 
 
     // 포트폴리오 삭제

@@ -31,4 +31,9 @@ public class Portfolio extends BaseEntity {
     private PortfolioFile portfolioFile;
 
 
+    public void updatePortfolio(String title, String description, PortfolioFile file) {
+        this.title = title;
+        this.description = description;
+        this.portfolioFile = file;
+    }
 }

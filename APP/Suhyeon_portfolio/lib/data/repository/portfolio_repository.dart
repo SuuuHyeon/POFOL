@@ -85,6 +85,32 @@ class PortfolioRepository {
       throw Exception('포트폴리오 삭제 중 에러발생.');
     }
   }
+
+  /// 포트폴리오 수정
+  Future<void> updatePortfolio(int portfolioId, String title, String description, Multi) async {
+    final accessToken = await _secureStorage.read('accessToken');
+    try {
+      final response = await _dio.put(
+        '/api/portfolio/update/$portfolioId', // 더미 데이터
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+        data: FormData(
+
+        )
+      );
+
+      if (response.statusCode == 200) {
+        print('업데이트 성공');
+      } else {
+        print('업데이트 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('업데이트 실패');
+    }
+  }
 }
 
 final portfolioRepositoryProvider = Provider<PortfolioRepository>(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suhyeon_portfolio/presentation/pages/portfolio_detail_page.dart';
 import 'package:suhyeon_portfolio/providers/auth_provider.dart';
 import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
 
@@ -105,21 +106,22 @@ class MyPage extends ConsumerWidget {
                             final isPdf = portfolio.fileUrl.endsWith('.pdf');
                             return Transform.scale(
                               scale: 0.95,
-                              child: Card(
-                                color: Colors.white,
-                                elevation: 7.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    isPdf
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              openPdfViewer(portfolio.fileUrl);
-                                            },
-                                            child: Container(
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.push('/portfolio_detail', extra: portfolio);
+                                },
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 7.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      isPdf
+                                          ? Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.grey.shade300,
                                                 borderRadius: const BorderRadius
@@ -134,62 +136,66 @@ class MyPage extends ConsumerWidget {
                                                   color: Colors.red,
                                                 ),
                                               ),
+                                            )
+                                          : ClipRRect(
+                                              borderRadius: const BorderRadius
+                                                  .vertical(
+                                                  top: Radius.circular(16.0)),
+                                              child: Image.network(
+                                                portfolio.fileUrl,
+                                                height: 200,
+                                                width: double.infinity,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey.shade300,
+                                                    height: 200,
+                                                    child: const Center(
+                                                      child: Icon(
+                                                          Icons.broken_image,
+                                                          size: 80),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             ),
-                                          )
-                                        : ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.vertical(
-                                                    top: Radius.circular(16.0)),
-                                            child: Image.network(
-                                              portfolio.fileUrl,
-                                              height: 200,
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Container(
-                                                  color: Colors.grey.shade300,
-                                                  height: 200,
-                                                  child: const Center(
-                                                    child: Icon(
-                                                        Icons.broken_image,
-                                                        size: 80),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('ID: ${portfolio.id}',
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('ID: ${portfolio.id}',
+                                                style: const TextStyle(
+                                                    color: Colors.grey)),
+                                            Text(
+                                              portfolio.title,
                                               style: const TextStyle(
-                                                  color: Colors.grey)),
-                                          Text(
-                                            portfolio.title,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            portfolio.description,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey,
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              portfolio.description,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
                                             ),
-                                          ),
-                                          ElevatedButton(onPressed: () {
-                                            portfolioViewModel.deletePortfolio(portfolio.id);
-                                          }, child: const Text('삭제'))
-                                        ],
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  portfolioViewModel
+                                                      .deletePortfolio(
+                                                          portfolio.id);
+                                                },
+                                                child: const Text('삭제'))
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

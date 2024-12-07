@@ -41,19 +41,18 @@ class PortFolioViewmodel extends ChangeNotifier {
     try {
       final response = await portfolioRepository.getPortfolioList();
       print('포트폴리오 리스트 : $response');
-      if(response.isEmpty) {
-          portfolioList.clear();
-          notifyListeners();
-          return;
-      }
-        final updatedList = response
-            .map((item) => item.copyWith(
-                fileUrl: '$baseUrl${item.fileUrl}')) // fileUrl 앞에 baseUrl 붙임
-            .toList();
+      if (response.isEmpty) {
         portfolioList.clear();
-        portfolioList.addAll(updatedList);
         notifyListeners();
-
+        return;
+      }
+      final updatedList = response
+          .map((item) => item.copyWith(
+              fileUrl: '$baseUrl${item.fileUrl}')) // fileUrl 앞에 baseUrl 붙임
+          .toList();
+      portfolioList.clear();
+      portfolioList.addAll(updatedList);
+      notifyListeners();
     } catch (e) {
       print(e);
     } finally {
@@ -80,9 +79,21 @@ class PortFolioViewmodel extends ChangeNotifier {
   }
 
   /// 포트폴리오 수정
-  // Future<void> updatePortfolio(int portfolioId, String title, String description, PlatformFile file) {
-  //
-  // }
+  Future<void> updatePortfolio(
+      int portfolioId, String title, String description, PlatformFile file) async {
+    try {
+      isLoading == true;
+      notifyListeners();
+      await portfolioRepository.updatePortfolio(portfolioId, title, description, file);
+      await getPortfolioList();
+      notifyListeners();
+    } catch (e){
+      print('포트폴리오 수정 에러: $e');
+    } finally {
+      isLoading == false;
+      notifyListeners();
+    }
+  }
 }
 
 // 포트폴리오뷰모델 프로바이더

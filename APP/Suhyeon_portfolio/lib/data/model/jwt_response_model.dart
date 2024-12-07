@@ -1,4 +1,4 @@
-// JWT 리스폰스 모델
+// 토큰 모델
 class JwtResponseModel {
   final String accessToken;
   final String refreshToken;

@@ -10,18 +10,14 @@ import itc.cse.suhyeon.suhyeon_portfolio.portfolio.repository.PortfolioRepositor
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,7 +30,7 @@ public class PortfolioService {
     final JwtTokenProvider jwtTokenProvider;
 
     // 포트폴리오 저장
-    public Portfolio savePortfolio(PortfolioDto portfolioDto) {
+    public void savePortfolio(PortfolioDto portfolioDto) {
         try {
             MultipartFile file = portfolioDto.getFile();
             // 파일 저장
@@ -43,11 +39,9 @@ public class PortfolioService {
             // 포트폴리오에 파일 세팅 후 저장
             Portfolio portfolio = portfolioDto.createPortfolio();
             portfolio.setPortfolioFile(portfolioFile);
-
-            return portfolioRepository.save(portfolio);
+            portfolioRepository.save(portfolio);
         } catch (Exception e) {
             log.info("포트폴리오 저장 실패");
-            return null;
         }
     }
 
@@ -87,4 +81,22 @@ public class PortfolioService {
         portfolioRepository.deleteById(portfolioId);
     }
 
+    // 포트폴리오 수정
+    public void updatePortfolio(Long portfolioId, PortfolioDto portfolioDto) {
+        // 해당 포트폴리오 있는지 확인
+        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElseThrow(() -> new EntityNotFoundException("해당 포트폴리오가 존재하지 않습니다."));
+        // 저장됐던 파일 삭제
+        portfolioFileService.deleteFile(portfolio.getPortfolioFile().getSavedPath());
+        // 새로운 파일 저장
+        try {
+            MultipartFile file = portfolioDto.getFile();
+            PortfolioFile portfolioFile = portfolioFileService.saveFile(file);
+            // 포트폴리오 수정
+            portfolio.updatePortfolio(portfolioDto.getTitle(), portfolioDto.getDescription(), portfolioFile);
+            System.out.println("===========" + portfolio.toString());
+            System.out.println("===========" + portfolioFile.toString());
+        } catch (IOException e) {
+            log.info("포트폴리오 수정 실패");
+        }
+    }
 }

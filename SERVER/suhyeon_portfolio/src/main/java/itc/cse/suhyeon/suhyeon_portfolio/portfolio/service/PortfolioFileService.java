@@ -28,6 +28,7 @@ public class PortfolioFileService {
 
     final PortfolioFileRepository portfolioFileRepository;
 
+    // 파일 저장
     public PortfolioFile saveFile(MultipartFile file) throws IOException {
         UUID uuid = UUID.randomUUID();
         String originalFileName = file.getOriginalFilename();

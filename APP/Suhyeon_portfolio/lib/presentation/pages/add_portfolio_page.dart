@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
+import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class AddPortfolioPage extends ConsumerStatefulWidget {
   const AddPortfolioPage({super.key});
@@ -22,45 +23,51 @@ class _AddPortfolioPageState extends ConsumerState<AddPortfolioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('포트폴리오 업로드'),
+        title: const Text(
+          '포트폴리오 업로드',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '포트폴리오 제목',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '포트폴리오 제목을 입력하세요',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               '포트폴리오 설명',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             TextField(
               controller: descriptionController,
               maxLines: 5,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '포트폴리오 설명을 입력하세요',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               '첨부파일',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
                 ElevatedButton(
@@ -74,16 +81,16 @@ class _AddPortfolioPageState extends ConsumerState<AddPortfolioPage> {
                       });
                     }
                   },
-                  child: Text('파일 선택'),
+                  child: const Text('파일 선택'),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Text(
                   selectedFile?.name ?? '파일을 선택해주세요',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ),
-            Spacer(),
+            // const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -100,7 +107,9 @@ class _AddPortfolioPageState extends ConsumerState<AddPortfolioPage> {
                           descriptionController.text,
                           selectedFile!,
                         );
-                    await ref.read(portfolioViewmodelProvider).getPortfolioList();
+                    await ref
+                        .read(portfolioViewmodelProvider)
+                        .getPortfolioList();
                     context.pop();
                   },
                   child: Text('업로드'),
@@ -116,6 +125,37 @@ class _AddPortfolioPageState extends ConsumerState<AddPortfolioPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () async {
+          if (selectedFile == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('파일을 선택해주세요!')),
+            );
+            return;
+          }
+          await ref.watch(portfolioViewmodelProvider).uploadPortfolio(
+            titleController.text,
+            descriptionController.text,
+            selectedFile!,
+          );
+          await ref
+              .read(portfolioViewmodelProvider)
+              .getPortfolioList();
+          context.pop();
+        },
+        child: BottomAppBar(
+          padding: EdgeInsets.only(top: 10),
+            color: AppColors.primary,
+            height: 50,
+            child: Text(
+              '업로드',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+              ),
+              textAlign: TextAlign.center,
+            )),
       ),
     );
   }
