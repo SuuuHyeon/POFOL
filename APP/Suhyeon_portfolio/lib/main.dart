@@ -17,17 +17,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'portfolio APP',
-      routerConfig: Routes.router,
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-      ),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'portfolio APP',
+        routerConfig: Routes.router,
+        theme: ThemeData(
+          fontFamily: 'Pretendard',
+        ),
 
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //   useMaterial3: true,
+        // theme: ThemeData(
+        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        //   useMaterial3: true,
+      ),
     );
   }
 }

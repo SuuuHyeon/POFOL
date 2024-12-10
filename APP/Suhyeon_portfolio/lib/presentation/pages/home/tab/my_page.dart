@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/presentation/pages/portfolio_detail_page.dart';
 import 'package:suhyeon_portfolio/providers/auth_provider.dart';
 import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
+import 'package:suhyeon_portfolio/theme/app_colors.dart';
 
 class MyPage extends ConsumerWidget {
   const MyPage({super.key});
@@ -98,123 +99,130 @@ class MyPage extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: portfolioViewModel.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : portfolioViewModel.portfolioList.isEmpty
-                      ? const Center(child: Text('포트폴리오가 없습니다.'))
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 40),
-                          itemCount: portfolioViewModel.portfolioList.length,
-                          itemBuilder: (context, index) {
-                            final portfolio =
-                                portfolioViewModel.portfolioList[index];
-                            final isPdf = portfolio.fileUrl.endsWith('.pdf');
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await portfolioViewModel.getPortfolioList();
+                },
+                color: AppColors.third,
+                backgroundColor: Colors.white,
+                child: portfolioViewModel.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : portfolioViewModel.portfolioList.isEmpty
+                        ? const Center(child: Text('포트폴리오가 없습니다.'))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 40),
+                            itemCount: portfolioViewModel.portfolioList.length,
+                            itemBuilder: (context, index) {
+                              final portfolio =
+                                  portfolioViewModel.portfolioList[index];
+                              final isPdf = portfolio.fileUrl.endsWith('.pdf');
 
-                            return GestureDetector(
-                              onTap: () {
-                                context.push('/portfolio_detail',
-                                    extra: portfolio);
-                              },
-                              child: Container(
-                                height: 150, // 카드의 높이
-                                margin: const EdgeInsets.only(bottom: 25),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 0),
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // 포트폴리오 제목
-                                      Text(
-                                        portfolio.title,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-
-                                      // 기술 스택
-                                      Text(
-                                        portfolio.techList.join(', '),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      const Spacer(),
-
-                                      // 수정 날짜 및 파일 열람 버튼
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 16),
-                                            child: Text(
-                                              '${portfolio.updatedTime} 수정',
-                                              style: const TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton.icon(
-                                            onPressed: () {
-                                              // 파일 열람 로직
-                                              // openFile(portfolio.fileUrl);
-                                            },
-                                            icon: const Icon(Icons.folder_open,
-                                                size: 16),
-                                            label: const Text(
-                                              '파일열기',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              elevation: 0,
-                                              backgroundColor:
-                                                  Colors.blueAccent,
-                                              foregroundColor: Colors.white,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 8),
-                                              textStyle:
-                                                  const TextStyle(fontSize: 14),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push('/portfolio_detail',
+                                      extra: portfolio);
+                                },
+                                child: Container(
+                                  height: 150, // 카드의 높이
+                                  margin: const EdgeInsets.only(bottom: 25),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 0),
                                       ),
                                     ],
                                   ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // 포트폴리오 제목
+                                        Text(
+                                          portfolio.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+
+                                        // 기술 스택
+                                        Text(
+                                          portfolio.techList.join(', '),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        const Spacer(),
+
+                                        // 수정 날짜 및 파일 열람 버튼
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 16),
+                                              child: Text(
+                                                '${portfolio.updatedTime} 수정',
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton.icon(
+                                              onPressed: () {
+                                                // 파일 열람 로직
+                                                // openFile(portfolio.fileUrl);
+                                              },
+                                              icon: const Icon(Icons.folder_open,
+                                                  size: 16),
+                                              label: const Text(
+                                                '파일열기',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                backgroundColor:
+                                                    Colors.blueAccent,
+                                                foregroundColor: Colors.white,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 8),
+                                                textStyle:
+                                                    const TextStyle(fontSize: 14),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
+                              );
+                            },
+                          ),
+              ),
             ),
           ],
         ),

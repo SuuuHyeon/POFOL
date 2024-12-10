@@ -55,7 +55,7 @@ public class PortfolioService {
 
         // email 값으로 내가 작성한 포트폴리오 리스트 조회
         List<PortfolioResponseDto> portfolioResponseDtoList = new ArrayList<>();
-        List<Portfolio> portfolioList = portfolioRepository.findAllByCreatedBy(email); // jpql 사용
+        List<Portfolio> portfolioList = portfolioRepository.findAllByOrderByCreatedBy(email); // jpql 사용
         for (Portfolio portfolio : portfolioList) {
             PortfolioResponseDto portfolioResponseDto = PortfolioResponseDto.builder()
                     // id는 앱에서 삭제할 때 사용하기 위해 같이 날려주기
