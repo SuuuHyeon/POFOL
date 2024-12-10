@@ -52,6 +52,11 @@ dependencies:
   # file picker
   file_picker: ^8.1.4
 
+  # url_launcher
+  url_launcher: ^6.3.1
+
+  # photo_view
+  photo_view: ^0.15.0
 
 
 

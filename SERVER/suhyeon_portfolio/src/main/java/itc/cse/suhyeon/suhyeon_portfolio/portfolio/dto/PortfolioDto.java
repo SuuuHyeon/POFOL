@@ -8,6 +8,8 @@ import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,6 +17,7 @@ public class PortfolioDto {
 
     private String title;
     private String description;
+    private List<String> techList;
     private MultipartFile file;
 
     private static ModelMapper modelMapper =new ModelMapper();

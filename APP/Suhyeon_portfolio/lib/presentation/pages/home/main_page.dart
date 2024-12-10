@@ -44,18 +44,29 @@ class _MainPageState extends ConsumerState<MainPage> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         leading: tabIndex == 1
-            ? Row(
-                children: [
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Text('프로필',
-                        style: TextStyle(
-                            fontSize: 28,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              )
+            ?
+        Row(
+          children: [
+            const SizedBox(width: 20),
+            Expanded(
+              child: Image.asset(
+                'assets/images/app_logo.png',
+              ),
+            ),
+          ],
+        )
+        // Row(
+        //         children: [
+        //           const SizedBox(width: 20),
+        //           Expanded(
+        //             child: Text('프로필',
+        //                 style: TextStyle(
+        //                     fontSize: 28,
+        //                     letterSpacing: 1,
+        //                     fontWeight: FontWeight.bold)),
+        //           ),
+        //         ],
+        //       )
             : Row(
                 children: [
                   const SizedBox(width: 20),

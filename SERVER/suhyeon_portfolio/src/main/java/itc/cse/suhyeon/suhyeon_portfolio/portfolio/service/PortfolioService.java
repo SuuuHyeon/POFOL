@@ -62,7 +62,9 @@ public class PortfolioService {
                     .id(portfolio.getId())
                     .title(portfolio.getTitle())
                     .description(portfolio.getDescription())
+                    .techList(portfolio.getTechList())
                     .fileUrl(portfolio.getPortfolioFile().getSavedPath())
+                    .updatedTime(portfolio.getUpdateTime())
                     .build();
             portfolioResponseDtoList.add(portfolioResponseDto);
             log.info("===========" + portfolioResponseDto.toString());
@@ -92,7 +94,7 @@ public class PortfolioService {
             MultipartFile file = portfolioDto.getFile();
             PortfolioFile portfolioFile = portfolioFileService.saveFile(file);
             // 포트폴리오 수정
-            portfolio.updatePortfolio(portfolioDto.getTitle(), portfolioDto.getDescription(), portfolioFile);
+            portfolio.updatePortfolio(portfolioDto.getTitle(), portfolioDto.getDescription(), portfolioDto.getTechList(), portfolioFile);
             System.out.println("===========" + portfolio.toString());
             System.out.println("===========" + portfolioFile.toString());
         } catch (IOException e) {

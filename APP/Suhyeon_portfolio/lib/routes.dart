@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:suhyeon_portfolio/data/model/portfolio.dart';
+import 'package:suhyeon_portfolio/presentation/pages/ProfilePage.dart';
 import 'package:suhyeon_portfolio/presentation/pages/add_portfolio_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/github_web_view_page.dart';
 import 'package:suhyeon_portfolio/presentation/pages/home/main_page.dart';
@@ -61,6 +62,14 @@ class Routes {
         path: '/github',
         pageBuilder: (context, state) => const MaterialPage(
           child: GithubWebViewPage(),
+        ),
+      ),
+
+      /// 프로필 페이지
+      GoRoute(
+        path: '/profile',
+        pageBuilder: (context, state) => const MaterialPage(
+          child: const ProfilePage(),
         ),
       ),
     ],

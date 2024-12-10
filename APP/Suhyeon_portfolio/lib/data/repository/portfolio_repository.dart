@@ -15,11 +15,12 @@ class PortfolioRepository {
 
   /// 포트폴리오 업로드
   Future<bool> uploadPortfolio(
-      String title, String description, PlatformFile file) async {
+      String title, String description, List<String> techList, PlatformFile file) async {
     final accessToken = await _secureStorage.read('accessToken');
     FormData formData = FormData.fromMap({
       "title": title,
       "description": description,
+      "techList": techList,
       "file": await MultipartFile.fromFile(file.path!, filename: file.name),
     });
 
