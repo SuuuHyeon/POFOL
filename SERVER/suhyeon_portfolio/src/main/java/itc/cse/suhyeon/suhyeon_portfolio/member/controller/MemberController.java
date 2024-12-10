@@ -1,6 +1,7 @@
 package itc.cse.suhyeon.suhyeon_portfolio.member.controller;
 
 
+import itc.cse.suhyeon.suhyeon_portfolio.common.exception.CustomException;
 import itc.cse.suhyeon.suhyeon_portfolio.jwt.JwtToken;
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberDto;
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberLoginDto;
@@ -45,15 +46,25 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public JwtToken login(@RequestBody MemberLoginDto member) {
-        String email = member.getEmail();
-        String password = member.getPassword();
-        JwtToken jwtToken = memberService.login(email, password);
-        log.info(jwtToken.getAccessToken());
-        log.info(jwtToken.getRefreshToken());
-
-        return jwtToken;
+    public ResponseEntity<?> login(@RequestBody MemberLoginDto member) {
+        try {
+            String email = member.getEmail();
+            String password = member.getPassword();
+            JwtToken jwtToken = memberService.login(email, password);
+            return ResponseEntity.ok(jwtToken);
+        } catch (CustomException e) {
+            // CustomException을 처리
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            // 예상치 못한 서버 오류 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버에 문제가 발생했습니다.");
+        }
     }
+
+
 
 
 //    @PostMapping("/login")

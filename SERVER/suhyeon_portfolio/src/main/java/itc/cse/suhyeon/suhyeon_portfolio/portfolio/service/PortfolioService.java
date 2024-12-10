@@ -97,6 +97,7 @@ public class PortfolioService {
             portfolio.updatePortfolio(portfolioDto.getTitle(), portfolioDto.getDescription(), portfolioDto.getTechList(), portfolioFile);
             System.out.println("===========" + portfolio.toString());
             System.out.println("===========" + portfolioFile.toString());
+            System.out.println("포트폴리오 수정 성공==============");
         } catch (IOException e) {
             log.info("포트폴리오 수정 실패");
         }

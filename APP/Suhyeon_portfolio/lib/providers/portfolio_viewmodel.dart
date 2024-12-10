@@ -107,11 +107,11 @@ class PortFolioViewmodel extends ChangeNotifier {
 
   /// 포트폴리오 수정
   Future<void> updatePortfolio(
-      int portfolioId, String title, String description, PlatformFile file) async {
+      int portfolioId, String title, String description, List<String> techList, PlatformFile file) async {
     try {
       isLoading == true;
       notifyListeners();
-      await portfolioRepository.updatePortfolio(portfolioId, title, description, file);
+      await portfolioRepository.updatePortfolio(portfolioId, title, description, techList, file);
       await getPortfolioList();
       notifyListeners();
     } catch (e){

@@ -41,7 +41,7 @@ public class Portfolio extends BaseEntity {
     public void updatePortfolio(String title, String description, List<String> techList, PortfolioFile file) {
         this.title = title;
         this.description = description;
-        this.portfolioFile = file;
         this.techList = techList;
+        this.portfolioFile = file;
     }
 }

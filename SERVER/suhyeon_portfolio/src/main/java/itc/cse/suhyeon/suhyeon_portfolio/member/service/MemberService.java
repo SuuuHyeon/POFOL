@@ -1,18 +1,18 @@
 package itc.cse.suhyeon.suhyeon_portfolio.member.service;
 
+import itc.cse.suhyeon.suhyeon_portfolio.common.exception.CustomException;
 import itc.cse.suhyeon.suhyeon_portfolio.jwt.JwtToken;
 import itc.cse.suhyeon.suhyeon_portfolio.jwt.JwtTokenProvider;
-import itc.cse.suhyeon.suhyeon_portfolio.member.constant.Role;
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberDto;
 import itc.cse.suhyeon.suhyeon_portfolio.member.dto.MemberResponseDto;
 import itc.cse.suhyeon.suhyeon_portfolio.member.entity.Member;
 import itc.cse.suhyeon.suhyeon_portfolio.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,21 +43,28 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    // 로그인
     public JwtToken login(String email, String password) {
-        System.out.println("로그인서비스시작");
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+        System.out.println("로그인 서비스 시작");
 
-        System.out.println("============== authenticationToken:" + authenticationToken);
+        // 1. 아이디 검증
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("아이디가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
+
+        // 2. 비밀번호 검증
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new CustomException("비밀번호가 틀렸습니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        // 3. 인증 성공 -> 토큰 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(email, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        System.out.println("============== authentication:" + authentication.toString());
-
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-
-        return jwtToken;
+        return jwtTokenProvider.generateToken(authentication);
     }
+
+
 
     public MemberResponseDto getMemberInfoByToken(String accessToken) {
         try {

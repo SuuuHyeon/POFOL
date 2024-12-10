@@ -66,23 +66,18 @@ class AuthRepository {
         print('토큰정보 : ${response.data}');
         return JwtResponseModel.fromJson(response.data);
       } else {
-        print('1');
-        throw ('로그인 실패: ${response.statusCode}');
+        throw Exception('로그인 실패: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      // 서버 응답에 따른 메시지 처리
       final statusCode = e.response?.statusCode;
-      if (statusCode == 401) {
-        throw '이메일 또는 비밀번호가 일치하지 않습니다.';
-      } else if (statusCode == 500) {
-        throw '서버 오류가 발생했습니다.';
-      } else {
-        throw '로그인 중 알 수 없는 오류 발생: $e';
-      }
+      final serverMessage = e.response?.data ?? '오류 발생';
+
+      throw serverMessage;
     } catch (e) {
       throw '로그인 중 알 수 없는 오류 발생: $e';
     }
   }
+
 
   /// 유저 정보 조회
   Future<Member> getUserInfo(String accessToken) async {

@@ -42,17 +42,16 @@ class AuthViewmodel extends StateNotifier<Member?> {
         );
         final member = await fetchUserData(response.accessToken);
         state = member;
-        print('토큰업데이트 완료, 유저정보조회');
-        await fetchUserData(response.accessToken);
-        print('유저정보조회 완료');
+        print('토큰 업데이트 완료, 유저 정보 조회 완료');
       } else {
-        print('토큰없음');
+        throw Exception('토큰 없음');
       }
     } catch (e) {
-      print('로그인실패(viewModel) $e');
+      // 에러 메시지를 받아 스낵바 표시
       rethrow;
     }
   }
+
 
   /// 유저 정보 조회
   Future<Member> fetchUserData(String accessToken) async {

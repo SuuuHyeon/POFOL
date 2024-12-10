@@ -8,6 +8,8 @@ import 'package:suhyeon_portfolio/presentation/pages/add_portfolio_page.dart';
 import 'package:suhyeon_portfolio/providers/portfolio_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../theme/app_colors.dart';
+
 class PortfolioDetailPage extends ConsumerStatefulWidget {
   final Portfolio portfolio;
 
@@ -22,6 +24,9 @@ class PortfolioDetailPage extends ConsumerStatefulWidget {
 class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
+  late List<String> selectedTechList;
+  final TextEditingController _skillController = TextEditingController();
+
   PlatformFile? _selectedFile;
   bool isEditing = false;
 
@@ -31,6 +36,7 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
     _titleController = TextEditingController(text: widget.portfolio.title);
     _descriptionController =
         TextEditingController(text: widget.portfolio.description);
+    selectedTechList = List.from(widget.portfolio.techList);
   }
 
   @override
@@ -40,6 +46,7 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
     super.dispose();
   }
 
+  /// 파일 선택
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.isNotEmpty) {
@@ -49,6 +56,7 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
     }
   }
 
+  /// 파일 열기
   Future<void> _openFile(String fileUrl) async {
     if (fileUrl.endsWith('.pdf')) {
       // PDF 파일을 외부 앱으로 열기
@@ -68,13 +76,13 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
         MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(
-              title: const Text("이미지 보기"),
+              backgroundColor: Colors.white,
+              title: const Text("포트폴리오"),
             ),
             body: Center(
               child: PhotoView(
                 imageProvider: NetworkImage(fileUrl),
-                backgroundDecoration:
-                const BoxDecoration(color: Colors.white),
+                backgroundDecoration: const BoxDecoration(color: Colors.white),
               ),
             ),
           ),
@@ -102,77 +110,74 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
         ),
         actions: [
           // if (!isEditing)
-            /// 드롭다운메뉴로 수정, 삭제 클릭하기
-            PopupMenuButton(
-              color: Colors.white,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isEditing = true;
-                          context.pop();
-                        });
-                      },
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.edit,
-                            size: 17,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            '수정',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    child: GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(portfolioViewmodelProvider)
-                            .deletePortfolio(widget.portfolio.id);
-                        context.pop();
-                      },
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.delete_forever,
-                            size: 17,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            '삭제',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                ];
-              },
+          /// 드롭다운메뉴로 수정, 삭제 클릭하기
+          PopupMenuButton(
+            color: Colors.white,
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  onTap: () {
+                    setState(() {
+                      isEditing = true;
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        size: 17,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        '수정',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    viewModel.deletePortfolio(widget.portfolio.id);
+                    context.pop();
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.delete_forever,
+                        size: 17,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        '삭제',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
         ],
       ),
+
+      /// 화면 body 부분, 스크롤 가능
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: isEditing ? _buildEditForm(viewModel) : _buildPortfolioDetail(),
+        child: isEditing
+            ? _buildEditForm(viewModel, selectedTechList)
+            : _buildPortfolioDetail(),
       ),
     );
   }
@@ -182,7 +187,7 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 기술 스택 (Chip)
+          /// 기술 스택
           if (widget.portfolio.techList.isNotEmpty) ...[
             SizedBox(
               width: double.infinity,
@@ -239,7 +244,7 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
           ),
           const SizedBox(height: 16),
 
-          /// 파일 또는 이미지
+          /// 파일 or 이미지
           if (widget.portfolio.fileUrl.endsWith('.pdf'))
             ElevatedButton.icon(
               onPressed: () {
@@ -276,60 +281,352 @@ class _PortfolioDetailPageState extends ConsumerState<PortfolioDetailPage> {
   }
 
   /// 수정 UI
-  Widget _buildEditForm(PortFolioViewmodel viewModel) {
+  Widget _buildEditForm(
+      PortFolioViewmodel viewModel, List<String> selectedTechList) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 제목 입력
+        Text(
+          "제목",
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
         TextField(
           controller: _titleController,
-          decoration: const InputDecoration(labelText: "제목"),
+          maxLength: 30,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1.2, color: Colors.black),
+            ),
+            contentPadding: const EdgeInsets.all(12),
+          ),
         ),
         const SizedBox(height: 16),
+
+        const Text(
+          "설명",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        // 설명 입력
         TextField(
           controller: _descriptionController,
+          maxLength: 200,
           maxLines: 5,
-          decoration: const InputDecoration(labelText: "설명"),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1.2, color: Colors.black),
+            ),
+            contentPadding: const EdgeInsets.all(12),
+          ),
         ),
         const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: _pickFile,
-          child: Text(_selectedFile == null
-              ? "파일 선택"
-              : "선택된 파일: ${_selectedFile!.name}"),
+
+        // 기술 스택 선택
+        const Text(
+          "기술 스택",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        // DropdownButton<String>(
+        //   hint: const Text("기술 스택 추가"),
+        //   items: viewModel.availableSkills
+        //       .where((tech) => !selectedTechList.contains(tech))
+        //       .map((tech) => DropdownMenuItem(
+        //     value: tech,
+        //     child: Text(tech),
+        //   ))
+        //       .toList(),
+        //   onChanged: (value) {
+        //     if (value != null) {
+        //       setState(() {
+        //         selectedTechList.add(value);
+        //       });
+        //     }
+        //   },
+        // ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isEditing = false;
-                });
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-              child: const Text("취소"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final updatedTitle = _titleController.text.trim();
-                final updatedDescription = _descriptionController.text.trim();
-                if (updatedTitle.isNotEmpty && updatedDescription.isNotEmpty) {
-                  await viewModel.updatePortfolio(
-                    widget.portfolio.id,
-                    updatedTitle,
-                    updatedDescription,
-                    _selectedFile!,
+            Expanded(
+              flex: 2,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    builder: (context) => _buildSkillModal(viewModel),
                   );
-                  setState(() {
-                    isEditing = false;
-                  });
-                }
-              },
-              child: const Text("저장"),
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.build_rounded, color: Colors.white, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        '리스트',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 3,
+              child: TextField(
+                controller: _skillController,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(12),
+                  hintText: '직접 입력',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        const BorderSide(width: 1.2, color: Colors.black),
+                  ),
+                ),
+                onSubmitted: (value) {
+                  if (value.isNotEmpty && !selectedTechList.contains(value)) {
+                    setState(() {
+                      selectedTechList.add(value);
+                      _skillController.clear();
+                    });
+                  }
+                },
+              ),
             ),
           ],
         ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: selectedTechList
+              .map(
+                (tech) => Chip(
+                  label: Text(tech),
+                  backgroundColor: Colors.blue.shade100,
+                  side: BorderSide.none,
+                  deleteIcon: const Icon(Icons.close, size: 16),
+                  onDeleted: () {
+                    setState(() {
+                      selectedTechList.remove(tech);
+                    });
+                  },
+                ),
+              )
+              .toList(),
+        ),
+        const SizedBox(height: 16),
+
+        // 파일 선택
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: GestureDetector(
+                onTap: () {
+                  _pickFile();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.attach_file, color: Colors.white, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        '파일 선택',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(12),
+                    color: _selectedFile != null ? Colors.grey.shade100 : Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _selectedFile?.name ?? '파일을 선택해주세요',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
+                      ),
+                      if (_selectedFile != null)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedFile = null;
+                            });
+                          },
+                          child: const Icon(Icons.close, size: 20, color: Colors.red),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 40),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // 취소 버튼
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () {
+                  setState(() {
+                    isEditing = false;
+                  });
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.grey.shade400),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  "취소",
+                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // 저장 버튼
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () async {
+                  final updatedTitle = _titleController.text.trim();
+                  final updatedDescription = _descriptionController.text.trim();
+                  if (updatedTitle.isNotEmpty &&
+                      updatedDescription.isNotEmpty &&
+                      selectedTechList.isNotEmpty) {
+                    await viewModel.updatePortfolio(
+                      widget.portfolio.id,
+                      updatedTitle,
+                      updatedDescription,
+                      selectedTechList,
+                      _selectedFile!,
+                    );
+                    context.pop();
+                    setState(() {
+                      isEditing = false;
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("모든 필드를 입력해주세요.")),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.third,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  "저장",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
       ],
+    );
+  }
+
+  Widget _buildSkillModal(PortFolioViewmodel portfolioViewModel) {
+    return StatefulBuilder(
+      builder: (context, modalSetState) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text(
+                '기술 스택 선택',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: portfolioViewModel.availableSkills.length,
+                  itemBuilder: (context, index) {
+                    final skill = portfolioViewModel.availableSkills[index];
+                    final isSelected = selectedTechList.contains(skill);
+                    return CheckboxListTile(
+                      activeColor: AppColors.primary,
+                      value: isSelected,
+                      title: Text(skill),
+                      onChanged: (bool? value) {
+                        modalSetState(() {
+                          if (value == true) {
+                            selectedTechList.add(skill);
+                          } else {
+                            selectedTechList.remove(skill);
+                          }
+                        });
+                        setState(() {});
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

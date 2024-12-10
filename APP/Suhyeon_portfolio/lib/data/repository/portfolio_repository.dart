@@ -88,7 +88,7 @@ class PortfolioRepository {
   }
 
   /// 포트폴리오 수정
-  Future<void> updatePortfolio(int portfolioId, String title, String description, Multi) async {
+  Future<void> updatePortfolio(int portfolioId, String title, String description, List<String> techList, PlatformFile file) async {
     final accessToken = await _secureStorage.read('accessToken');
     try {
       final response = await _dio.put(
@@ -98,9 +98,13 @@ class PortfolioRepository {
             'Authorization': 'Bearer $accessToken',
           },
         ),
-        data: FormData(
-
-        )
+        data:
+          FormData.fromMap({
+            "title": title,
+            "description": description,
+            "techList": techList,
+            "file": await MultipartFile.fromFile(file.path!, filename: file.name),
+          }),
       );
 
       if (response.statusCode == 200) {
